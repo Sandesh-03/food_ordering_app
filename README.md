@@ -124,12 +124,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
   Feel free to open issues or pull requests for new features or bug fixes!
 
 ---
-
-### **How to Use**
-
-- Save this as `README.md` in your project’s root directory.
-- Replace the placeholder GitHub repository URL (`yourusername/food-ordering-app.git`) with your own URL.
-- Replace `assets/onboard_example.png` with the actual paths to your images.
-- Add a `LICENSE` file if you plan to use the MIT license or any other license.
-
-Let me know if you need help with screenshots, further customizations, or anything else!
