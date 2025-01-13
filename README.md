@@ -70,7 +70,7 @@ lib/
 
 | Onboarding Screen | Home Screen | Cart Screen |  Order Summery |
 | :----------------: | :---------: | :---------: | :---------: |
-| ![Onboarding](assets/screenshot/6061849617202528585.jpg) | ![Home](assetsassets/screenshot/6061849617202528582.jpg) | ![Cart](assets/screenshot/6061849617202528581.jpg) | ![Order Summery](assets/screenshot/6061849617202528580.jpg) |
+| ![Onboarding](assets/screenshot/6061849617202528585.jpg) | ![Home](assets/screenshot/6061849617202528582.jpg) | ![Cart](assets/screenshot/6061849617202528581.jpg) | ![Order Summery](assets/screenshot/6061849617202528580.jpg) |
 ## 🚀 **How to Run**
 
 1. **Clone the Repository**:
