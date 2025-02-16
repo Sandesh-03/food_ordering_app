@@ -18,8 +18,13 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
+          cache: true
+
+      - name: Install Dart
+        run: echo "DART_SDK_VERSION=3.5.4" >> $GITHUB_ENV
 
       - run: flutter --version
+      - run: dart --version
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk --release
@@ -40,8 +45,13 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
+          cache: true
+
+      - name: Install Dart
+        run: echo "DART_SDK_VERSION=3.5.4" >> $GITHUB_ENV
 
       - run: flutter --version
+      - run: dart --version
       - run: flutter pub get
       - run: flutter test
       - run: flutter build web --release
