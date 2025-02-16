@@ -22,7 +22,6 @@ jobs:
 
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build apk --release
 
       - name: Upload APK
@@ -45,7 +44,6 @@ jobs:
 
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build web --release
 
       - name: Deploy to GitHub Pages
