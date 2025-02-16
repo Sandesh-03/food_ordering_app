@@ -17,16 +17,15 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'  
+          flutter-version: '3.19.1'
+
+      - run: flutter --version
       - run: flutter pub get
       - run: flutter test
-
-      # Build Android APK
       - run: flutter build apk --release
 
-      # Upload APK as an artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v4  
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -40,15 +39,13 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'  
+          flutter-version: '3.19.1'
 
+      - run: flutter --version
       - run: flutter pub get
       - run: flutter test
-
-      # Build Web
       - run: flutter build web --release
 
-      # Deploy Web to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
