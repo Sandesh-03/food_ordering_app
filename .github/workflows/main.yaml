@@ -1,57 +1,56 @@
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+      - master
+      - develop
 
-name: "Build & Release"
+name: "Build & Deploy"
 
 jobs:
-  build:
-    name: Build & Release
-    runs-on: ubuntu-latest  # Use ubuntu-latest for faster builds (switch to macos-latest if building for iOS)
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      # Set up Java (required for Android builds)
-      - uses: actions/setup-java@v3
-        with:
-          java-version: '11'  # Use Java 11 (LTS version)
-
-      # Set up Flutter
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'  # Use the latest stable Flutter version
+          flutter-version: '3.5.4'
 
-      # Install dependencies
       - run: flutter pub get
-
-      # Run tests (optional, remove if you don't have tests)
       - run: flutter test
 
       # Build Android APK
-      - run: flutter build apk --release --split-per-abi
+      - run: flutter build apk --release
 
-      # Build iOS IPA (optional, remove if not needed)
-      - run: |
-          flutter build ios --release --no-codesign
-          cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
-          cd ..
-          zip -r app.ipa Payload
-
-      # Build Flutter Web
-      - run: flutter build web
-
-      # Push artifacts to GitHub Releases
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
+      # Upload APK as an artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa,build/web/**"
-          tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}  # Use the default GITHUB_TOKEN
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  build-web:
+    name: Build & Deploy Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.5.4'
+
+      - run: flutter pub get
+      - run: flutter test
+
+      # Build Web
+      - run: flutter build web --release
+
+      # Deploy Web to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages
