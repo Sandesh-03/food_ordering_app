@@ -2,39 +2,42 @@ on:
   pull_request:
     branches:
       - main
-      - master
   push:
     branches:
       - main
-      - master
-      - develop
 
 name: "Build & Release"
 
 jobs:
   build:
     name: Build & Release
-    runs-on: macos-latest
+    runs-on: ubuntu-latest  # Use ubuntu-latest for faster builds (switch to macos-latest if building for iOS)
     steps:
-      - uses: actions/checkout@v1
+      # Checkout the repository
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-java@v1
+      # Set up Java (required for Android builds)
+      - uses: actions/setup-java@v3
         with:
-          java-version: '12.x'
+          java-version: '11'  # Use Java 11 (LTS version)
 
-      - uses: subosito/flutter-action@v1
+      # Set up Flutter
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.2.0'
+          flutter-version: '3.16.0'  # Use the latest stable Flutter version
 
+      # Install dependencies
       - run: flutter pub get
+
+      # Run tests (optional, remove if you don't have tests)
       - run: flutter test
 
       # Build Android APK
-      - run: flutter build apk --debug --split-per-abi
+      - run: flutter build apk --release --split-per-abi
 
-      # Build iOS IPA
+      # Build iOS IPA (optional, remove if not needed)
       - run: |
-          flutter build ios --no-codesign
+          flutter build ios --release --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
@@ -45,33 +48,10 @@ jobs:
       # Build Flutter Web
       - run: flutter build web
 
-      # Push to Releases
+      # Push artifacts to GitHub Releases
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa,build/web/**"
+          artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa,build/web/**"
           tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}
-
-  build-web:
-    name: Build & Deploy Web
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '2.2.0'
-
-      - run: flutter pub get
-      - run: flutter test
-
-      # Build Flutter Web
-      - run: flutter build web
-
-      # Deploy to GitHub Pages (optional)
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.TOKEN }}
-          publish_dir: ./build/web
+          token: ${{ secrets.TOKEN }}  # Use the default GITHUB_TOKEN
